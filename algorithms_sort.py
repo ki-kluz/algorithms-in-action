@@ -1,7 +1,22 @@
+import time
+
+
+def calculation_of_algorithm_speed(name: str):			# Подсчёт скорости выполнения алгоритма (декоратор)
+		def decorator(func):
+			def wrapper(arr):
+				start_time = time.perf_counter()
+				res = func(arr)
+				end_time = time.perf_counter()
+				print(f"{name}: {end_time - start_time:.3f} sec")
+				return res
+			return wrapper
+		return decorator
+
 class AlgorithmsSort:
 	"""Класс, содержащий реализации базовых алгоритмов сортировки."""
 	
 	@staticmethod
+	@calculation_of_algorithm_speed("Bubble Sort")
 	def bubble_sort(arr):
 		"""Алгоритм сортировки пузырьком (Bubble Sort)"""
 		n = len(arr)
@@ -16,6 +31,7 @@ class AlgorithmsSort:
 		return arr
 	
 	@staticmethod
+	@calculation_of_algorithm_speed("Insertion Sort")
 	def insertion_sort(arr):
 		"""Алгоритм сортировки вставками (Insertion Sort)"""
 		n = len(arr)
@@ -29,6 +45,7 @@ class AlgorithmsSort:
 		return arr
 	
 	@staticmethod
+	@calculation_of_algorithm_speed("Selection Sort (In-Place)")
 	def selection_sort(arr):
 		"""Алгоритм сортировки выбором (Selection Sort) на месте"""
 		n = len(arr)
@@ -52,6 +69,7 @@ class AlgorithmsSort:
 		return smallest_idx
 	
 	@staticmethod
+	@calculation_of_algorithm_speed("Selection Sort (With-Copy)")
 	def selection_sort_with_copy(arr):
 		"""Алгоритм сортировки выбором (Selection Sort) через копию"""
 		source_arr = arr.copy()
