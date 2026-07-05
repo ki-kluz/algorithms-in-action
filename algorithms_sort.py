@@ -1,16 +1,31 @@
-# import ...
-
 class AlgorithmsSort:
 	"""Класс, содержащий реализации базовых алгоритмов сортировки."""
 	
 	@staticmethod
 	def bubble_sort(arr):
 		"""Алгоритм сортировки пузырьком (Bubble Sort)"""
+		n = len(arr)
+		for i in range(n):
+			# Начинаем с 0 (ВСЕГДА):
+			# - i нужен, чтобы не лезть в уже отсортированную половину (конец)
+			# - 1 нужен, чтобы при j + 1 не вылететь за границы массива
+			for j in range(0, n - i - 1):
+				# Сравниваем парные эл-ты
+				if arr[j] > arr[j + 1]:
+					arr[j], arr[j + 1] = arr[j + 1], arr[j]
 		return arr
 	
 	@staticmethod
 	def insertion_sort(arr):
 		"""Алгоритм сортировки вставками (Insertion Sort)"""
+		n = len(arr)
+		# Начинаем со ВТОРОГО, тк ПЕРВЫЙ сам по себе отсортирован
+		for i in range(1, n):
+			j = i
+			# Пока не дошли до начала И левый эл-т > правого
+			while j > 0 and arr[j - 1] > arr[j]:
+				arr[j], arr[j - 1] = arr[j - 1], arr[j]
+				j -= 1		# Сдвигаем индекс j влево вслед за элементом
 		return arr
 	
 	@staticmethod
@@ -19,7 +34,7 @@ class AlgorithmsSort:
 		n = len(arr)
 		# i - граница (всё, что левее i уже отсортировано)
 		for i in range(n):
-			min_idx = i		# Текущий эл-т неотсортированной последовательности - "минимума"
+			min_idx = i		# Текущий эл-т неотсортированной последовательности - "минимум"
 			for j in range(i + 1, n):
 				if arr[j] < arr[min_idx]:
 					min_idx = j		# Запоминаем индекс нового "минимума"
@@ -48,10 +63,3 @@ class AlgorithmsSort:
 			# Вырезаем минимум из старого массива (копии) и добавляем в новый
 			new_arr.append(source_arr.pop(smallest_idx))
 		return new_arr
-	
-
-aSort = AlgorithmsSort()
-test_arr_01 = [2, 3, 2, 1, 0, 5, 8, 10]
-print(aSort._find_smallest_idx(test_arr_01))
-print(aSort.selection_sort_with_copy(test_arr_01))
-print(aSort.selection_sort(test_arr_01))
