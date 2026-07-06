@@ -1,13 +1,13 @@
 import algorithms_sort as aSort
-import random_generation as rGenerator
+import random_generation as rGen
 
 
 def run_benchmark(count=4, size=10000, low=1, high=10000, swaps=100):
 		aSort.times.clear()
 		
 		"""Подготовка тестовых данных"""
-		original_random = rGenerator.generate_random_array(size, low, high)
-		original_nearly = rGenerator.generate_nearly_sorted(swaps, low, high)
+		original_random = rGen.generate_random_array(size, low, high)
+		original_nearly = rGen.generate_nearly_sorted(swaps, low, high)
 		tests_random = [original_random.copy() for _ in range(count)]
 		tests_nearly = [original_nearly.copy() for _ in range(count)]
 
