@@ -46,25 +46,21 @@ class Stack:
 # print(stack)								# Вывести объект stack (напр. <__main__.Stack object at 0x1009a6250>)
 # print(stack._items)					# Вывести эл-ты stack (напр. deque([]))
 # print(list(stack._items))		# Вывести эл-ты stack в виде массива (напр. [])
-
-# stack.push(10)
-# print(list(stack._items))
-# stack.push(20)
-# print(list(stack._items))
-# stack.push(30)
-# print(list(stack._items))
-
 # print(list(reversed(stack._items)))		# Вывести эл-ты stack в порядке LIFO (от последнего добавленного к первому)
 
 def generate_start_matrix(rows=5, cols=5):
 		"""Генерация начальной матрицы (лабиринта) заданной размерности"""
-		matrix = np.full((rows, cols), '#', dtype=str)		# Создать пустую матрицу
+		matrix = np.full((rows, cols), '#', dtype=str)
 		# i, j = np.indices((rows, cols))		# Создать сетку координат строк и столбцов
 		# # Заменить нужные эл-ты на основе логической маски (Boolean indexing) -> '#'
 		# matrix[(i % 2 == 0) | (j % 2 == 0)] = '#'		# Стены
 		return matrix
 
-# print(generate_start_matrix())
+# matrix = generate_start_matrix()
+# print(matrix)
+# start = (1, 1)
+# print(matrix[start])		# == print(matrix[start[0], start[1]])
+# print(matrix[start[0] + 1, start[1]])
 
 """
 ПОДЗАДАЧИ:
@@ -83,20 +79,21 @@ def generate_start_matrix(rows=5, cols=5):
 6. Добавить стартовую комнату в маршрут (stack.push(start))
 
 7. ПОКА маршрут не пуст (not stack.is_empty)
-    1. Достать из маршрута последнюю комнату (stack.pop()) -> текущая комната
-    2. Определить координаты соседних комнат для текущей (array) -> потенциальные направления движения
-    3. ДЛЯ всех соседних комнат:
-        1. ЕСЛИ соседняя комната НЕ лежит в диапазоне лабиринта ИЛИ посещённая
-						1. Удалить соседнюю комнату из потенциальных направлений движения
-		4. ЕСЛИ существуют потенциальные направлению
+    1. Достать из маршрута и очистить последнюю комнату (stack.pop()) -> текущая комната
+    2. Определить координаты соседних комнат для текущей (array) -> все направления движения
+		3. Определить валидные координаты соседних комнат (array) -> потенциальные направления движения
+    4. ДЛЯ всех соседних комнат:
+        1. ЕСЛИ соседняя комната лежит в диапазоне лабиринта И не посещённая
+						1. Добавить соседнюю комнату в потенциальные направления движения
+		5. ЕСЛИ существуют потенциальные направления
 				1. Добавить текущую комнату в маршрут
 				2. Выбрать случайную соседнюю комнату в качестве направления (random.choice)
 				3. Удалить стену между текущей комнатой и выбранным соседом
 				4. Добавить выбранного соседа в посещённые комнаты
 				5. Добавить выбранного соседа в маршрут
-		5. Иначе (потенциальные направления отсутствуют)
+		6. Иначе (потенциальные направления отсутствуют)
 				1. Переходим к следующей итерации по маршруту (continue)
-6. Завершить генерацию (return)
+8. Завершить генерацию (return)
 """
 
 def generate_maze(rows=5, cols=5):
@@ -110,20 +107,28 @@ def generate_maze(rows=5, cols=5):
 
 		while not path.is_empty():
 				room = path.pop()
+				maze[room] = ' '		# Очистить комнату
+
 				# nbs - neighbors (nb - neighbor)
 				nbs = [(room[0] - 2, room[1]),
 							 (room[0], room[1] - 2),
 							 (room[0] + 2, room[1]),
 							 (room[0], room[1] + 2)]
+				# print(f"nbs: {nbs}")
+				valid = []
 				for nb in nbs:
-						if ((nb[0] < 0 or nb[0] > rows) or \
-								(nb[1] < 0 or nb[1] > cols) or \
-								(nb in visited)):
-								nbs.remove(nb)
-				if nbs:
+						r, c = nb
+						if ((0 < r < rows) and (0 < c < cols) and (nb not in visited)):
+								valid.append(nb)
+				# print(f"valid: {valid}")
+				if valid:
 					path.push(room)
-					new_room = random.choice(nbs)
+					new_room = random.choice(valid)
+
 					# Удалить стену между текущей комнатой и выбранным соседом
+					wall = ((room[0] + new_room[0]) // 2, (room[1] + new_room[1]) // 2)
+					maze[wall] = ' '
+
 					visited.add(new_room)
 					path.push(new_room)
 				else:
@@ -131,4 +136,4 @@ def generate_maze(rows=5, cols=5):
 				
 		return maze
 
-# print(generate_maze())
+print(generate_maze(11, 11))
