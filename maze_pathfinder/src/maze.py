@@ -48,7 +48,14 @@ class Stack:
 # print(list(stack._items))		# Вывести эл-ты stack в виде массива (напр. [])
 # print(list(reversed(stack._items)))		# Вывести эл-ты stack в порядке LIFO (от последнего добавленного к первому)
 
-def generate_start_matrix(rows=5, cols=5):
+def validate_size(rows, cols):
+		"""Проверить, что размеры нечётные и >= 3"""
+		if rows < 3 or cols < 3:
+				raise ValueError(f"Размеры должны быть >= 3, получено: {rows}×{cols}")
+		if rows % 2 == 0 or cols % 2 == 0:
+				raise ValueError(f"Размеры должны быть нечётными, получено {rows}×{cols}")
+
+def create_grid(rows=11, cols=11):
 		"""Генерация начальной матрицы (лабиринта) заданной размерности"""
 		matrix = np.full((rows, cols), '#', dtype=str)
 		# i, j = np.indices((rows, cols))		# Создать сетку координат строк и столбцов
@@ -61,6 +68,32 @@ def generate_start_matrix(rows=5, cols=5):
 # start = (1, 1)
 # print(matrix[start])		# == print(matrix[start[0], start[1]])
 # print(matrix[start[0] + 1, start[1]])
+
+def get_neighbors(room, rows, cols, visited):
+		"""Вернуть список валидных не посещённых соседних комнат"""
+		# nbs - neighbors (nb - neighbor)
+		nbs = [(room[0] - 2, room[1]),
+					 (room[0], room[1] - 2),
+					 (room[0] + 2, room[1]),
+					 (room[0], room[1] + 2)]
+		# print(f"nbs: {nbs}")
+		valid = []
+		for nb in nbs:
+				r, c = nb
+				if ((0 < r < rows) and (0 < c < cols) and (nb not in visited)):
+						valid.append(nb)
+		# print(f"valid: {valid}")
+		return valid
+
+def carve_passage(grid, room1, room2):
+    """Удалить стену между первой и второй комнатой"""
+    wall = ((room1[0] + room2[0]) // 2, (room1[1] + room2[1]) // 2)
+    grid[wall] = ' '
+
+def print_maze(maze):
+		"""Вывод лабиринта"""
+		for row in maze:
+				print(*(row))
 
 """
 ПОДЗАДАЧИ:
@@ -96,44 +129,42 @@ def generate_start_matrix(rows=5, cols=5):
 8. Завершить генерацию (return)
 """
 
-def generate_maze(rows=5, cols=5):
-		maze = generate_start_matrix(rows, cols)
+def generate_maze(rows=11, cols=11):
+		"""Генерация лабиринта методом DFS (with backtracking)"""
+		validate_size(rows, cols)
+
+		grid = create_grid(rows, cols)
 		visited = set()
 		path = Stack()
 
-		start = (1, 1)
-		visited.add(start)
-		path.push(start)
+		# Координаты начальной / конечной точки
+		start, finish = (1, 0), (rows - 2, cols - 1)
+		grid[start], grid[finish] = 'S', 'F'
+
+		# Начинаем с первой комнаты (правее начальной точки)
+		first_room = (start[0], start[1] + 1)
+		visited.add(first_room)
+		path.push(first_room)
 
 		while not path.is_empty():
 				room = path.pop()
-				maze[room] = ' '		# Очистить комнату
+				grid[room] = ' '		# Очистить комнату
 
-				# nbs - neighbors (nb - neighbor)
-				nbs = [(room[0] - 2, room[1]),
-							 (room[0], room[1] - 2),
-							 (room[0] + 2, room[1]),
-							 (room[0], room[1] + 2)]
-				# print(f"nbs: {nbs}")
-				valid = []
-				for nb in nbs:
-						r, c = nb
-						if ((0 < r < rows) and (0 < c < cols) and (nb not in visited)):
-								valid.append(nb)
-				# print(f"valid: {valid}")
+				valid = get_neighbors(room, rows, cols, visited)
 				if valid:
 					path.push(room)
 					new_room = random.choice(valid)
-
+					
 					# Удалить стену между текущей комнатой и выбранным соседом
-					wall = ((room[0] + new_room[0]) // 2, (room[1] + new_room[1]) // 2)
-					maze[wall] = ' '
+					carve_passage(grid, room, new_room)
 
 					visited.add(new_room)
 					path.push(new_room)
 				else:
 					continue
 				
-		return maze
+		return grid
 
-print(generate_maze(11, 11))
+
+maze = generate_maze(11, 11)
+print_maze(maze)
