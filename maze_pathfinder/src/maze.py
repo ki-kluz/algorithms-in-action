@@ -1,7 +1,7 @@
 import random
-from collections import deque
 
 import numpy as np
+from structures import Graph, Stack
 
 """
 ИНФОРМАЦИЯ:
@@ -23,31 +23,6 @@ import numpy as np
 => так мы сможем возвращаться до ближайшей "развилки" (- комнаты, у которой есть не посещенные соседи)
 """
 
-class Stack:
-		def __init__(self):
-			self._items = deque()
-
-		def size(self):
-			return len(self._items)
-		
-		def is_empty(self):
-			return self.size() == 0
-		
-		def push(self, item):
-			self._items.append(item)
-
-		def pop(self):
-			if not self.is_empty():
-				return self._items.pop()
-			return None
-
-# stack = Stack()
-
-# print(stack)								# Вывести объект stack (напр. <__main__.Stack object at 0x1009a6250>)
-# print(stack._items)					# Вывести эл-ты stack (напр. deque([]))
-# print(list(stack._items))		# Вывести эл-ты stack в виде массива (напр. [])
-# print(list(reversed(stack._items)))		# Вывести эл-ты stack в порядке LIFO (от последнего добавленного к первому)
-
 def validate_size(rows, cols):
 		"""Проверить, что размеры нечётные и >= 3"""
 		if rows < 3 or cols < 3:
@@ -58,16 +33,7 @@ def validate_size(rows, cols):
 def create_grid(rows=11, cols=11):
 		"""Генерация начальной матрицы (лабиринта) заданной размерности"""
 		matrix = np.full((rows, cols), '#', dtype=str)
-		# i, j = np.indices((rows, cols))		# Создать сетку координат строк и столбцов
-		# # Заменить нужные эл-ты на основе логической маски (Boolean indexing) -> '#'
-		# matrix[(i % 2 == 0) | (j % 2 == 0)] = '#'		# Стены
 		return matrix
-
-# matrix = generate_start_matrix()
-# print(matrix)
-# start = (1, 1)
-# print(matrix[start])		# == print(matrix[start[0], start[1]])
-# print(matrix[start[0] + 1, start[1]])
 
 def get_neighbors(room, rows, cols, visited):
 		"""Вернуть список валидных не посещённых соседних комнат"""
@@ -134,6 +100,7 @@ def generate_maze(rows=11, cols=11):
 		validate_size(rows, cols)
 
 		grid = create_grid(rows, cols)
+		graph = Graph()
 		visited = set()
 		path = Stack()
 
@@ -143,6 +110,7 @@ def generate_maze(rows=11, cols=11):
 
 		# Начинаем с первой комнаты (правее начальной точки)
 		first_room = (start[0], start[1] + 1)
+		graph.add_node(first_room)
 		visited.add(first_room)
 		path.push(first_room)
 
@@ -158,13 +126,10 @@ def generate_maze(rows=11, cols=11):
 					# Удалить стену между текущей комнатой и выбранным соседом
 					carve_passage(grid, room, new_room)
 
+					graph.add_edge(room, new_room, weight=1)
 					visited.add(new_room)
 					path.push(new_room)
 				else:
 					continue
 				
 		return grid
-
-
-maze = generate_maze(11, 11)
-print_maze(maze)
