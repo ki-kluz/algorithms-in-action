@@ -37,17 +37,16 @@ def create_grid(rows=11, cols=11):
 
 def get_neighbors(room, rows, cols, visited):
 		"""Вернуть список валидных не посещённых соседних комнат"""
-		# nbs - neighbors (nb - neighbor)
-		nbs = [(room[0] - 2, room[1]),
-					 (room[0], room[1] - 2),
-					 (room[0] + 2, room[1]),
-					 (room[0], room[1] + 2)]
-		# print(f"nbs: {nbs}")
+		neighbors = [(room[0] - 2, room[1]),
+					 			 (room[0], room[1] - 2),
+					 			 (room[0] + 2, room[1]),
+					 			 (room[0], room[1] + 2)]
+		# print(f"neighbors: {neighbors}")
 		valid = []
-		for nb in nbs:
-				r, c = nb
-				if ((0 < r < rows) and (0 < c < cols) and (nb not in visited)):
-						valid.append(nb)
+		for neighbor in neighbors:
+				r, c = neighbor
+				if ((0 < r < rows) and (0 < c < cols) and (neighbor not in visited)):
+						valid.append(neighbor)
 		# print(f"valid: {valid}")
 		return valid
 
@@ -132,4 +131,4 @@ def generate_maze(rows=11, cols=11):
 				else:
 					continue
 				
-		return grid
+		return grid, graph
