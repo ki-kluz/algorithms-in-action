@@ -1,5 +1,5 @@
 from maze import generate_maze, print_maze
-from search import bfs
+from search import bfs, visual_path
 
 
 def main(rows=11, cols=11):
@@ -7,11 +7,13 @@ def main(rows=11, cols=11):
 		maze, graph = generate_maze(rows, cols)
 		print_maze(maze)
 
-		print("\n=== Maze's graph ===\n")
+		print("\n=== Maze graph ===\n")
 		graph.print_graph()
 
 		print("\n=== Shortest path search (BFS) ===\n")
-		print(bfs(graph, (1, 1), (rows - 2, cols - 2)))
+		short_path = bfs(graph, (1, 1), (rows - 2, cols - 2))
+		print(short_path)
+		print_maze(visual_path(maze, short_path))
 
 
 if __name__ == "__main__":

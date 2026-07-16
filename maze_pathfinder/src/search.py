@@ -31,11 +31,19 @@ def bfs(graph: Graph, start: tuple, finish: tuple):
 		return None		# Очередь пуста, а finish не найден - пути нет
 
 def reconstruct_path(parents: dict, finish: tuple):
+		"""Восстановить путь от finish до start через родителей"""
 		path = []
 		current = finish
 
 		while current is not None:
 				path.append(current)
-
+				current = parents.get(current)
 		# Путь собран от finish к start - переворачиваем
 		return list(reversed(path))
+
+
+def visual_path(maze, path, symbol: str='.'):
+		"""Визуализация кратчайшего пути в лабиринте"""
+		for r, c in path:
+				maze[r, c] = symbol
+		return maze

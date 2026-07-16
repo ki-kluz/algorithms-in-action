@@ -30,7 +30,7 @@ def validate_size(rows, cols):
 		if rows % 2 == 0 or cols % 2 == 0:
 				raise ValueError(f"Размеры должны быть нечётными, получено {rows}×{cols}")
 
-def create_grid(rows=11, cols=11):
+def create_matrix(rows=11, cols=11):
 		"""Генерация начальной матрицы (лабиринта) заданной размерности"""
 		matrix = np.full((rows, cols), '#', dtype=str)
 		return matrix
@@ -98,14 +98,14 @@ def generate_maze(rows=11, cols=11):
 		"""Генерация лабиринта методом DFS (with backtracking)"""
 		validate_size(rows, cols)
 
-		grid = create_grid(rows, cols)
+		maze = create_matrix(rows, cols)
 		graph = Graph()
 		visited = set()
 		path = Stack()
 
 		# Координаты начальной / конечной точки
 		start, finish = (1, 0), (rows - 2, cols - 1)
-		grid[start], grid[finish] = 'S', 'F'
+		maze[start], maze[finish] = 'S', 'F'
 
 		# Начинаем с первой комнаты (правее начальной точки)
 		first_room = (start[0], start[1] + 1)
@@ -115,7 +115,7 @@ def generate_maze(rows=11, cols=11):
 
 		while not path.is_empty():
 				room = path.pop()
-				grid[room] = ' '		# Очистить комнату
+				maze[room] = ' '		# Очистить комнату
 
 				valid = get_neighbors(room, rows, cols, visited)
 				if valid:
@@ -123,7 +123,7 @@ def generate_maze(rows=11, cols=11):
 					new_room = random.choice(valid)
 					
 					# Удалить стену между текущей комнатой и выбранным соседом
-					carve_passage(grid, room, new_room)
+					carve_passage(maze, room, new_room)
 
 					graph.add_edge(room, new_room, weight=1)
 					visited.add(new_room)
@@ -131,4 +131,4 @@ def generate_maze(rows=11, cols=11):
 				else:
 					continue
 				
-		return grid, graph
+		return maze, graph
