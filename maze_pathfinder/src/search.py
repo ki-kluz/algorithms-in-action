@@ -37,10 +37,9 @@ def reconstruct_path(parents: dict, finish: tuple):
 
 		while current is not None:
 				path.append(current)
-				current = parents.get(current)
+				current = parents[current]
 		# Путь собран от finish к start - переворачиваем
 		return list(reversed(path))
-
 
 def visual_path(maze, path, symbol: str='.'):
 		"""Визуализация кратчайшего пути в лабиринте"""

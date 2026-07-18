@@ -7,13 +7,13 @@ def main(rows=11, cols=11):
 		maze, graph = generate_maze(rows, cols)
 		print_maze(maze)
 
-		print("\n=== Maze graph ===\n")
-		graph.print_graph()
+		# print("\n=== Maze graph ===\n")
+		# graph.print_graph()
 
 		print("\n=== Shortest path search (BFS) ===\n")
-		short_path = bfs(graph, (1, 1), (rows - 2, cols - 2))
-		print(short_path)
-		print_maze(visual_path(maze, short_path))
+		shortest_path = bfs(graph, (1, 1), (rows - 2, cols - 2))
+		# print(short_path)
+		print_maze(visual_path(maze, shortest_path))
 
 
 if __name__ == "__main__":

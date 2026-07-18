@@ -7,7 +7,7 @@
 Убедитесь, что вы находитесь в корне репозитория и установили зависимости, после чего выполните команду:
 
 ```bash
-python 01_sorting_benchmark/src/benchmark.py
+python3 sorting_benchmark/src/main.py
 ```
 
 ## Поддерживаемые алгоритмы
@@ -52,5 +52,5 @@ Winner: Insertion Sort (0.051)
 
 ## TODO
 
-- [ ] Добавить реализацию QuickSort ($O(n \log n)$)
+- [ ] Добавить реализацию QuickSort ($$O(n \log n)$$)
 - [ ] Интегрировать визуализацию графиков времени через `matplotlib`
