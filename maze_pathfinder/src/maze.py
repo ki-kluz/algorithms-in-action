@@ -60,6 +60,30 @@ def print_maze(maze):
 		for row in maze:
 				print(*(row))
 
+
+"""
+РЕЗЮМЕ:
+Идея провалилась, тк при дополнительном удалении стен нужно вести graph, иначе происходит только видоизменение картинки без влияния на работу...
+Идея вероятности цикла (loop_prob):
+ - ведения дополнительного построения "проходов" на этапе изначальной генерации графа
+ВЫХОДИТ ЗА РАМКИ КУРСА (и проекта)
+"""
+# def randomize_passages(maze, visited: set, count: int=6):
+# 		"""Удаление случайных стен и создание дополнительных проходов"""
+# 		# Определение всех возможных стен
+# 		walls = []
+# 		for r in range(1, len(maze) - 1):
+# 				for c in range(1, len(maze[r]) - 1):
+# 						if (r, c) not in visited:
+# 								walls.append((r, c))
+# 		# Случайный выбор стен для удаления
+# 		choice = random.sample(walls, count)
+# 		# Удаление стен
+# 		for r, c in choice:
+# 				maze[r][c] = ' '
+# 		return None
+
+
 """
 ПОДЗАДАЧИ:
 	- Инициализация
@@ -130,5 +154,5 @@ def generate_maze(rows=11, cols=11):
 					path.push(new_room)
 				else:
 					continue
-				
+		
 		return maze, graph
